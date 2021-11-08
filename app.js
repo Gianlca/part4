@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require('express')
 require('express-async-errors')
 const app = express()
@@ -25,6 +26,10 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 app.use('/api/login', loginController)
 app.use('/api/users', usersController)
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
 app.use(middleware.tokenExtractor)
 app.use('/api/blogs', middleware.userExtractor, blogsController)
 app.use(middleware.unknownEndpoint)
